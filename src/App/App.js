@@ -4,6 +4,9 @@ import axios from "axios";
 //hooks
 import { useState } from "react";
 
+//images
+import sun from'../images/sun.png';
+
 //styles
 import "./App.css";
 
@@ -13,6 +16,8 @@ const App = () => {
     const [message, setMessage] = useState("");
     const [city, setCity] = useState("");
     const [temperature, setTemperature] = useState(null);
+    const [temperatureMax, setTemperatureMax] = useState(null);
+    const [temperatureLow, setTemperatureLow] = useState(null);
     const [humidity, setHumidity] = useState(null);
     const [wind, setWind] = useState(null);
     const [clouds, setClouds] = useState(null);
@@ -27,6 +32,8 @@ const App = () => {
         .then(function (response) {
             if (response.status === 200) {
                 setTemperature(response.data.main.temp);
+                setTemperatureMax(response.data.main.temp_max);
+                setTemperatureLow(response.data.main.temp_min);
                 setHumidity(response.data.main.humidity);
                 setWind(response.data.wind.speed);
                 setClouds(response.data.clouds.all);
@@ -45,41 +52,57 @@ const App = () => {
             }
         })
     }
-//npm run build
 
     return (
-    <div className="appContainer">
-        <div>
-            <form
-            onKeyDown={(e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                getCurrentWeather(e);
-                }
-            }}
-            >
-                <input
-                type="text"
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="enter the name of the city"
-                />
-                <button
-                onClick={(e) => getCurrentWeather(e)}
-                type="submit"
+    <div className="app__container">
+        <header className="app__header header">
+            <h1 className="app__title">Weather</h1>
+            <div className="app__form-container">
+                <form
+                className="app__form form"
+                onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    getCurrentWeather(e);
+                    }
+                }}
                 >
-                Check
-                </button>
-            </form>
-        </div>
-        {temperature && (
-            <div>
-                <p>{city}</p>
-                <p>Temperature: {Math.round(temperature)}°C</p>
-                <p>Humidity: {humidity}</p>
-                <p>Wind: {wind}</p>
-                <p>Clouds: {clouds}</p>
-                <p>Weather description: {description}</p>
+                    <input
+                    type="text"
+                    className="form__input"
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Enter the name of the city"
+                    />
+                    <button
+                    className="form__button"
+                    onClick={(e) => getCurrentWeather(e)}
+                    type="submit"
+                    >
+                    Check
+                    </button>
+                </form>
             </div>
+            <p className="app__city">{city}</p>
+        </header>
+        
+        {temperature && (
+            <div className="app__weather-parameters parameters"> 
+                <div className="parameters__temperature-container temperature">
+                    <div className="temperature__descr">
+                        <p className="temperature__value_main">{Math.round(temperature)}°</p>
+                        <div className="temperature__others">
+                            <p className="temperature__value_high">H: {Math.round(temperatureMax)}°</p>
+                            <p className="temperature__value_low">L: {Math.round(temperatureLow)}°</p>  
+                        </div>
+                    </div>
+                    <img className="temperature__image" src={sun} alt="weather"/>   
+                </div>
+ 
+                <div className="parameters__other other">
+                    <p className="other__humidity">Humidity: {humidity}%</p>
+                    <p className="other__wind">Wind: {Math.round(wind)}m/s</p>  
+                </div>                      
+            </div> 
         )}
         <p>{message}</p>
     </div>
