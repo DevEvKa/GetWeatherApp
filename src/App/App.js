@@ -30,7 +30,7 @@ import humidityIcon from '../images/icons/drop.png';
 import sunriseIcon from '../images/icons/sunrise.png';
 import sunsetIcon from '../images/icons/sunset.png';
 import pressureIcon from '../images/icons/down-arrow.png';
-import thermometer from '../images/icons/thermometer.png';
+import thermometerIcon from '../images/icons/thermometer.png';
 
 
 //styles
@@ -39,12 +39,10 @@ import "./App.css";
 
 
 const App = () => {
-    const [message, setMessage] = useState("");
+
     const [city, setCity] = useState("");
     const [temperature, setTemperature] = useState(null);
     const [temperatureFeels, setTemperatureFeels] = useState(null);
-    const [temperatureMax, setTemperatureMax] = useState(null);
-    const [temperatureLow, setTemperatureLow] = useState(null);
     const [description, setDescription] = useState("");
     const [image, setImage] = useState(partlySunny);
     const [sunrise, setSunrise] = useState(null);
@@ -53,7 +51,8 @@ const App = () => {
     const [wind, setWind] = useState(null);
     const [windDirection, setWindDirection] = useState(null);
     const [pressure, setPressure] = useState(null);
-    const [timezone, setTimezone] = useState(0);    
+    const [timezone, setTimezone] = useState(0);  
+    const [errorMessage, setErrorMessage] = useState(""); 
   
     const apiKey = "59448ffe68637a9102bfd128ccba3d92";
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}&units=metric`;
@@ -66,8 +65,6 @@ const App = () => {
                 
                 setTemperature(response.data.main.temp);
                 setTemperatureFeels(response.data.main.feels_like);
-                setTemperatureMax(response.data.main.temp_max);
-                setTemperatureLow(response.data.main.temp_min);
                 setDescription(response.data.weather[0].description);
                 setCity(response.data.name);
                 setSunrise(response.data.sys.sunrise);
@@ -150,18 +147,15 @@ const App = () => {
                     setImage(tornado);
                     document.body.style.backgroundColor = '#a5b2c7';
                 }
-                console.log(response);
-                setMessage("");
+                setErrorMessage("");
             } else {
                 throw new Error("Something went wrong!");
             }          
         })
         .catch(function (error) {
-            if (error.code === "ERR_BAD_REQUEST") {
-                setMessage("Enter correct City name");
-                setTemperature("");
-                setHumidity("");
-                setDescription("");
+            if (error.code) {
+                setTemperature("");               
+                setErrorMessage("Oops... We have not found such a city. Check the name of the city you entered is correct, or enter the nearest large city.");
             }
         })
     }
@@ -243,7 +237,7 @@ const App = () => {
                             <p className="main-info__date">{getCurrentDate('currentDate')}</p>
                             <p className="main-info__day">{getCurrentDate('currentDay')}</p>
                             <div className="main-info__thermometer-container">
-                                <img className="main-info__thermometer-icon" src={thermometer} alt="Thermometer icon"/>
+                                <img className="main-info__thermometer-icon" src={thermometerIcon} alt="Thermometer icon"/>
                                 <p className="main-info__thermometer-text">{Math.round(temperature)}°</p>
                             </div>
                             <p className="main-info__feels-like">Feels like {Math.round(temperatureFeels)}°</p>
@@ -291,9 +285,8 @@ const App = () => {
         </div>
         )}
         {!temperature && (
-            <p>{message}</p>
-        )}
-        
+            <p className="error__message">{errorMessage}</p>
+        )}   
     </div>
   );
 }
