@@ -1,5 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState }  from 'react';
 import axios from "axios";
+
+//images
+import sun from '../images/sunny.png';
+import partlySunny from '../images/partly-cloudy.png';
+import partlyCloudy from '../images/cloudy-day.png';
+import heavyCloudy from '../images/cloudy.png';
+import rain from '../images/raining.png';
+import lightRain from '../images/rainy.png';
+import drizzle from '../images/drizzle.png';
+import heavyDrizzle from '../images/hailstorm.png';
+import lightThunderstorm from '../images/thunderstormm.png';
+import thunderstorm from '../images/thunderbolt.png';
+import wetThunderstorm from '../images/thunderstorm.png';
+import lightSnow from '../images/winter.png';
+import wetSnow from '../images/sleet.png';
+import heavySnow from '../images/snowfall.png';
+import mist from '../images/foggy-day.png';
+import squalls from '../images/windy.png';
+import tornado from '../images/typhoon.png';
 
 //icons
 import windIcon from '../images/icons/wind.png';
@@ -15,13 +34,15 @@ import thermometerIcon from '../images/icons/thermometer.png';
 import "./App.css";
 
 const App = () => {
+
     const [appState, setAppState] = useState({});
     const [city, setCity] = useState("");
     const [temperature, setTemperature] = useState(null);
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(partlySunny);
     const [windDirection, setWindDirection] = useState(null);
+    const [timezone, setTimezone] = useState(0);  
     const [errorMessage, setErrorMessage] = useState(""); 
-
+  
     const apiKey = "59448ffe68637a9102bfd128ccba3d92";
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}&units=metric`;
   
@@ -30,84 +51,86 @@ const App = () => {
         axios.get(url)
         .then(function (response) {
             if (response.status === 200) {
-                const data = response.data;
+                let data = response.data;
                 setAppState(data);
-
-                setTemperature(appState.main.temp);
                 
-                //направление ветра
-                if (appState.wind.deg>11.25 &&  appState.wind.deg<78.75) {
+                setTemperature(response.data.main.temp);
+                setCity(response.data.name);
+                setTimezone(response.data.timezone);
+                
+                //wind direction
+                if (response.data.wind.deg>11.25 &&  response.data.wind.deg<78.75) {
                     setWindDirection('North-East'); 
-                } else if (appState.wind.deg>78.76 &&  appState.wind.deg<101.25) {
+                } else if (response.data.wind.deg>78.76 &&  response.data.wind.deg<101.25) {
                     setWindDirection('East'); 
-                } else if (appState.wind.deg>101.26 &&  appState.wind.deg<168.75) {
+                } else if (response.data.wind.deg>101.26 &&  response.data.wind.deg<168.75) {
                     setWindDirection('South-East'); 
-                } else if (appState.wind.deg>168.76 &&  appState.wind.deg<191.25) {
+                } else if (response.data.wind.deg>168.76 &&  response.data.wind.deg<191.25) {
                     setWindDirection('South'); 
-                } else if (appState.wind.deg>191.26 &&  appState.wind.deg<258.75) {
+                } else if (response.data.wind.deg>191.26 &&  response.data.wind.deg<258.75) {
                     setWindDirection('South-West'); 
-                } else if (appState.wind.deg>258.76 &&  appState.wind.deg<281.25) {
+                } else if (response.data.wind.deg>258.76 &&  response.data.wind.deg<281.25) {
                     setWindDirection('West'); 
-                } else if (appState.wind.deg>281.26 &&  appState.wind.deg<326.25) {
+                } else if (response.data.wind.deg>281.26 &&  response.data.wind.deg<326.25) {
                     setWindDirection('North-West'); 
                 } else {
                     setWindDirection('North'); 
                 }
 
-                //картинка и фон
+
+                //image and background
                 if (response.data.weather[0].description === ("clear sky")) {
-                    setImage(require('../images/sunny.png'));
+                    setImage(sun);
                     document.body.style.backgroundColor = '#fff917';
                 } else if (response.data.weather[0].description === ("few clouds")) {
-                    setImage(require('../images/partly-cloudy.png'));
+                    setImage(partlySunny);
                     document.body.style.backgroundColor = '#fff9ae';
+                } else if (response.data.weather[0].description === ("broken clouds" || "scattered clouds")) {
+                    setImage(partlyCloudy);
+                    document.body.style.backgroundColor = '#fff9e1';
                 } else if (response.data.weather[0].description === ("overcast clouds")) {
-                    setImage(require('../images/cloudy.png'));
+                    setImage(heavyCloudy);
                     document.body.style.backgroundColor = '#a6bdd7';
                 } else if (response.data.weather[0].description === ("light rain" || "moderate rain" || "light intensity shower rain")) {
-                    setImage(require('../images/rainy.png'));
+                    setImage(lightRain);
                     document.body.style.backgroundColor = '#d1e5f9';
                 } else if (response.data.weather[0].description === ("heavy intensity rain" || "very heavy rain" || "extreme rain" || "shower rain" || "heavy intensity shower rain" || "ragged shower rain")) {
-                    setImage(require('../images/raining.png'));
+                    setImage(rain);
                     document.body.style.backgroundColor = '#bccee0';
                 } else if (response.data.weather[0].description === ("light intensity drizzle" || "drizzle" || "heavy intensity drizzle" || "light intensity drizzle rain" || "drizzle rain")) {
-                    setImage(require('../images/drizzle.png'));
+                    setImage(drizzle);
                     document.body.style.backgroundColor = '#e0e8ca';
                 } else if (response.data.weather[0].description === ("heavy intensity drizzle rain" || "shower rain and drizzle" || "heavy shower rain and drizzle" || "shower drizzle")) {
-                    setImage(require('../images/hailstorm.png'));
+                    setImage(heavyDrizzle);
                     document.body.style.backgroundColor = '#bbbfcb';                    
                 } else if (response.data.weather[0].description === ("thunderstorm with light rain" || "thunderstorm with rain" || "thunderstorm with heavy rain" || "thunderstorm with light drizzle" || "thunderstorm with drizzle" || "thunderstorm with heavy drizzle")) {
-                    setImage(require('../images/thunderstorm.png'));
+                    setImage(wetThunderstorm);
                     document.body.style.backgroundColor = '#b1c3d7';
                 } else if (response.data.weather[0].description === ("light thunderstorm")) {
-                    setImage(require('../images/thunderstormm.png'));
+                    setImage(lightThunderstorm);
                     document.body.style.backgroundColor = '#a5cce8';
                 } else if (response.data.weather[0].description === ("thunderstorm" || "heavy thunderstorm" || "ragged thunderstorm")) {
-                    setImage(require('../images/thunderbolt.png'));
+                    setImage(thunderstorm);
                     document.body.style.backgroundColor = '#357fb5';
                 } else if (response.data.weather[0].description === ("light snow" || "Snow" || "Light shower snow")) {
-                    setImage(require('../images/winter.png'));
+                    setImage(lightSnow);
                     document.body.style.backgroundColor = '#f2fafa';
                 } else if (response.data.weather[0].description === ("Sleet" || "Light shower sleet" || "Shower sleet" || "Light rain and snow" || "Rain and snow")) {
-                    setImage(require('../images/sleet.png'));
+                    setImage(wetSnow);
                     document.body.style.backgroundColor = 'b9bbbf';
                 } else if (response.data.weather[0].description === ("Heavy snow" || "Shower snow" || "Heavy shower snow")) {
-                    setImage(require('../images/snowfall.png'));
+                    setImage(heavySnow);
                     document.body.style.backgroundColor = '#8267a9';
                 } else if (response.data.weather[0].description === ("mist" || "Smoke" || "Haze" || "sand/ dust whirls" || "fog" || "sand" || "dust" || "volcanic ash")) {
-                    setImage(require('../images/foggy-day.png'));
+                    setImage(mist);
                     document.body.style.backgroundColor = 'bcc9bb';
                 } else if (response.data.weather[0].description === ("squalls")) {
-                    setImage(require('../images/windy.png'));
+                    setImage(squalls);
                     document.body.style.backgroundColor = '#9da8b9';
                 } else if (response.data.weather[0].description === ("tornado")) {
-                    setImage(require('../images/typhoon.png'));
+                    setImage(tornado);
                     document.body.style.backgroundColor = '#a5b2c7';
-                } else {
-                    setImage(require('../images/cloudy-day.png'));
-                    document.body.style.backgroundColor = '#fff9e1';
                 }
-
                 setErrorMessage("");
             } else {
                 throw new Error("Something went wrong!");
@@ -139,7 +162,7 @@ const App = () => {
         if (milliseconds === 0) {
             return "-:-";
         }
-        let n = milliseconds + 43200000 + appState.timezone;
+        let n = milliseconds + 43200000 + timezone;
         let date = new Date(n);
         let hour = date.getHours();
         let minute = date.getMinutes();
@@ -150,7 +173,7 @@ const App = () => {
         if (milliseconds === 0) {
             return "-:-";
         }
-        let n = milliseconds + appState.timezone;
+        let n = milliseconds + timezone;
         let date = new Date(n);
         let hour = date.getHours();
         let minute = date.getMinutes();
