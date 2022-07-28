@@ -30,6 +30,7 @@ import humidityIcon from '../images/icons/drop.png';
 import sunriseIcon from '../images/icons/sunrise.png';
 import sunsetIcon from '../images/icons/sunset.png';
 import pressureIcon from '../images/icons/down-arrow.png';
+import thermometer from '../images/icons/thermometer.png';
 
 
 //styles
@@ -41,6 +42,7 @@ const App = () => {
     const [message, setMessage] = useState("");
     const [city, setCity] = useState("");
     const [temperature, setTemperature] = useState(null);
+    const [temperatureFeels, setTemperatureFeels] = useState(null);
     const [temperatureMax, setTemperatureMax] = useState(null);
     const [temperatureLow, setTemperatureLow] = useState(null);
     const [description, setDescription] = useState("");
@@ -51,8 +53,7 @@ const App = () => {
     const [wind, setWind] = useState(null);
     const [windDirection, setWindDirection] = useState(null);
     const [pressure, setPressure] = useState(null);
-    const [timezone, setTimezone] = useState(0);
-    
+    const [timezone, setTimezone] = useState(0);    
   
     const apiKey = "59448ffe68637a9102bfd128ccba3d92";
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}&units=metric`;
@@ -62,7 +63,9 @@ const App = () => {
         axios.get(url)
         .then(function (response) {
             if (response.status === 200) {
+                
                 setTemperature(response.data.main.temp);
+                setTemperatureFeels(response.data.main.feels_like);
                 setTemperatureMax(response.data.main.temp_max);
                 setTemperatureLow(response.data.main.temp_min);
                 setDescription(response.data.weather[0].description);
@@ -101,7 +104,7 @@ const App = () => {
                 } else if (response.data.weather[0].description === ("few clouds")) {
                     setImage(partlySunny);
                     document.body.style.backgroundColor = '#fff9ae';
-                } else if (response.data.weather[0].description === ("broken clouds" || "scattered clouds" || "broken clouds")) {
+                } else if (response.data.weather[0].description === ("broken clouds" || "scattered clouds")) {
                     setImage(partlyCloudy);
                     document.body.style.backgroundColor = '#fff9e1';
                 } else if (response.data.weather[0].description === ("overcast clouds")) {
@@ -186,7 +189,6 @@ const App = () => {
         let hour = date.getHours();
         let minute = date.getMinutes();
        return `${hour}:${minute}`;
-
     }
 
     function getSunriseTime(milliseconds) {
@@ -199,10 +201,6 @@ const App = () => {
         let minute = date.getMinutes();
        return `${hour}:${minute}`;
     }
-
-    
-
-
 
     return (
     <div className="app__container">
@@ -234,52 +232,62 @@ const App = () => {
 
         {temperature && (
             <div className="app__info-container info">
-            <section className="info__main main-info">
                 {city && (
                     <p className="main-info__city">{city}</p>
                     )
                 }
-                <p className="main-info__date">{getCurrentDate('currentDate')}</p>
-                <p className="main-info__day">{getCurrentDate('currentDay')}</p>
-                <img className="main-info__image" src={image} alt="weather image"/>
-                <div className="main-info__weather">
-                    <p className="main-info__temperature">{Math.round(temperature)}°</p>
-                    <p className="main-info__descr">{description}</p>
-                </div> 
-
-            </section>
-
-            <section className="info__other other-info">
-                <div className="other-info__column">
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={sunriseIcon} alt="Sunrise icon"/>
-                        <p className="other-info__sunrise other-info__parameter"><span className="other-info__parameter-text text-sunrise">Sunrise: </span>{getSunriseTime(sunrise)}</p>
+                <div className="info__main_container">
+                <section className="info__main main-info">
+                    <div className="main-info__common">
+                        <div className="main-info__hiddenOnSmallScreens">
+                            <p className="main-info__date">{getCurrentDate('currentDate')}</p>
+                            <p className="main-info__day">{getCurrentDate('currentDay')}</p>
+                            <div className="main-info__thermometer-container">
+                                <img className="main-info__thermometer-icon" src={thermometer} alt="Thermometer icon"/>
+                                <p className="main-info__thermometer-text">{Math.round(temperature)}°</p>
+                            </div>
+                            <p className="main-info__feels-like">Feels like {Math.round(temperatureFeels)}°</p>
+                        </div>
                     </div>
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={sunsetIcon} alt="Sunset icon"/>
-                        <p className="other-info__sunset other-info__parameter"><span className="other-info__parameter-text text-sunset">Sunset:  </span>{getSunsetTime(sunset)}</p>
+                    <div className="main-info__weather">
+                        <img className="main-info__image" src={image} alt="weather image"/>
+                        <div className="main-info__text">
+                            <p className="main-info__temperature">{Math.round(temperature)}°</p>
+                            <p className="main-info__descr">{description}</p>                        
+                        </div>
+                    </div> 
+                </section>
+                <section className="info__other other-info">
+                    <div className="other-info__column">
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={sunriseIcon} alt="Sunrise icon"/>
+                            <p className="other-info__sunrise other-info__parameter"><span className="other-info__parameter-text text-sunrise">Sunrise: </span>{getSunriseTime(sunrise)}</p>
+                        </div>
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={sunsetIcon} alt="Sunset icon"/>
+                            <p className="other-info__sunset other-info__parameter"><span className="other-info__parameter-text text-sunset">Sunset:  </span>{getSunsetTime(sunset)}</p>
+                        </div>
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={humidityIcon} alt="Humidity icon"/>
+                            <p className="other-info__humidity other-info__parameter"><span className="other-info__parameter-text text-humidity">Humidity: </span>{humidity}%</p>
+                        </div>                   
                     </div>
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={humidityIcon} alt="Humidity icon"/>
-                        <p className="other-info__humidity other-info__parameter"><span className="other-info__parameter-text text-humidity">Humidity: </span>{humidity}%</p>
-                    </div>                   
-                </div>
-                <div className="other-info__column">
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={windIcon} alt="Wind icon"/>
-                        <p className="other-info__wind other-info__parameter"><span className="other-info__parameter-text text-wind">Wind: </span>{Math.round(wind)} m/s</p>
+                    <div className="other-info__column">
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={windIcon} alt="Wind icon"/>
+                            <p className="other-info__wind other-info__parameter"><span className="other-info__parameter-text text-wind">Wind: </span>{Math.round(wind)} m/s</p>
+                        </div>
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={windDirectionIcon} alt="Wind direction icon"/>
+                            <p className="other-info__windDirection other-info__parameter"><span className="other-info__parameter-text text-windDirection">Wind direction: </span>{windDirection}</p>
+                        </div>
+                        <div className="other-info__parameter-container">
+                            <img className="other-info__parameter-icon" src={pressureIcon} alt="Atmospheric pressure icon"/>
+                            <p className="other-info__pressure other-info__parameter"><span className="other-info__parameter-text text-pressure">Pressure: </span>{Math.round(pressure*0.750064)} mmhg</p>
+                        </div>                   
                     </div>
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={windDirectionIcon} alt="Wind direction icon"/>
-                        <p className="other-info__windDirection other-info__parameter"><span className="other-info__parameter-text text-windDirection">Wind direction: </span>{windDirection}</p>
-                    </div>
-                    <div className="other-info__parameter-container">
-                        <img className="other-info__parameter-icon" src={pressureIcon} alt="Atmospheric pressure icon"/>
-                        <p className="other-info__pressure other-info__parameter"><span className="other-info__parameter-text text-pressure">Pressure: </span>{Math.round(pressure*0.750064)} mmhg</p>
-                    </div>                   
-                </div>
-                
-            </section>
+                </section>
+            </div>
         </div>
         )}
         {!temperature && (
