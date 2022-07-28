@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/getweatherapp/static/css/main.b19950d9.css",
+    "main.js": "/getweatherapp/static/js/main.dacf75be.js",
+    "static/media/rainy.png": "/getweatherapp/static/media/rainy.b6a808c6e80ad2b3b8fe.png",
+    "static/media/cloudy.png": "/getweatherapp/static/media/cloudy.f6e390e8e956eae347bf.png",
+    "static/media/snowfall.png": "/getweatherapp/static/media/snowfall.197274ff7a739828be52.png",
+    "static/media/partly-cloudy.png": "/getweatherapp/static/media/partly-cloudy.46d14d94f86b2333db65.png",
+    "static/media/typhoon.png": "/getweatherapp/static/media/typhoon.c16fcb7963bfbb976e5d.png",
+    "static/media/raining.png": "/getweatherapp/static/media/raining.92141aac4442c171b04c.png",
+    "static/media/windy.png": "/getweatherapp/static/media/windy.e7667c6e187bf459dd7a.png",
+    "static/media/sleet.png": "/getweatherapp/static/media/sleet.26825e813c631d0cf383.png",
+    "static/media/thunderstorm.png": "/getweatherapp/static/media/thunderstorm.9041069fe33858a24ac1.png",
+    "static/media/winter.png": "/getweatherapp/static/media/winter.48229248b9367d651a6f.png",
+    "static/media/thunderstormm.png": "/getweatherapp/static/media/thunderstormm.436737c73e68e4a31975.png",
+    "static/media/thunderbolt.png": "/getweatherapp/static/media/thunderbolt.a606ea56e7ed3c464027.png",
+    "static/media/cloudy-day.png": "/getweatherapp/static/media/cloudy-day.09ebc518ec014910b5a6.png",
+    "static/media/hailstorm.png": "/getweatherapp/static/media/hailstorm.77fd2b1baa5cdb8c9a5f.png",
+    "static/media/sunny.png": "/getweatherapp/static/media/sunny.c43f1013fea4dbc54875.png",
+    "static/media/drizzle.png": "/getweatherapp/static/media/drizzle.15ab11c4d23c4eb025d9.png",
+    "static/media/foggy-day.png": "/getweatherapp/static/media/foggy-day.8b5aff9c51a41035066c.png",
+    "index.html": "/getweatherapp/index.html",
+    "main.b19950d9.css.map": "/getweatherapp/static/css/main.b19950d9.css.map",
+    "main.dacf75be.js.map": "/getweatherapp/static/js/main.dacf75be.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b19950d9.css",
+    "static/js/main.dacf75be.js"
+  ]
+}
