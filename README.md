@@ -1,6 +1,7 @@
 # Weather App
 Small and very simple application for getting the information about current weather in the preselected city.
 The application is available at the [following link](https://devevka.github.io/GetWeatherApp/).
+Also you can  watch the project overview on [YouTube](https://youtu.be/qHunODGjBk8) (in Russian).
 
 ## Features
 - made with React JS based on create-react-app
